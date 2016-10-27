@@ -13,4 +13,10 @@
       3. xxx
 ```
 
-## 
+## Getting start
+
+- setting up your bot [new bot user](https://my.slack.com/services/new/bot)
+- start a bot with this command:
+```
+  ./notes/weekly.py yourToken
+```

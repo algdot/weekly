@@ -8,6 +8,7 @@ import datetime
 import smtplib
 from email.mime.text import MIMEText
 
+from config import *
 
 
 class WeeklyNote:
@@ -73,9 +74,6 @@ class WeeklyNote:
         self.client.rtm_send_message(self.channel, '请确认是否正确，回复【ok】发送邮件，否则重写。')
 
     def sendMail(self):
-        sender = 'no-reply@domain.com'
-        receivers = ['test@domain.com']
-
         today = datetime.date.today()
         weekday = today.weekday()
         # default start_day is monday, end_day is friday
@@ -86,7 +84,7 @@ class WeeklyNote:
         msg['From'] = sender
         msg['Subject'] = '基础平台研发部周报-%s（%s~%s）' % (self.user, start_day.strftime(WeeklyNote.default_date_format), end_day.strftime(WeeklyNote.default_date_format))
         msg['To'] = ";".join(receivers)
-        smtpObj = smtplib.SMTP('mail.domain.com')
+        smtpObj = smtplib.SMTP(mail_host)
         smtpObj.sendmail(sender, receivers, msg.as_string())
         smtpObj.quit()
         self.client.rtm_send_message(self.channel,'邮件发送成功')
@@ -104,7 +102,7 @@ def main():
             last_read = client.rtm_read()
             if last_read:
                 try:
-                    print str(last_read).encode('utf-8')
+                    logging.debug(last_read)
 
                     for msg in last_read:
                         if "type" in msg.keys() and msg['type'] == 'message':
@@ -126,7 +124,7 @@ def main():
                                     client.rtm_send_message(message_channel, '请重新周报');
                                 continue
                             # entry
-                            if text and u'周报' in text:
+                            if text and '<@%s>'%my_bot_id in text and u'周报' in text:
                                 weeklyNote = WeeklyNote('demo', client, message_channel);
                                 weeklyNote.write(text)
                                 weeklyNotes[user] = {'wn': weeklyNote, 'writing': True, 'waitConfirm': False}
@@ -137,4 +135,5 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level = app_log_level)
     main()

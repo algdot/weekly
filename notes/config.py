@@ -1,9 +1,9 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 # encoding: utf-8
 
-sender = 'no-reply@helijia.com'
-receivers = ['baiju@helijia.com']
-mail_host = 'mail.helijia.com'
+sender = 'no-reply@domain.com'
+receivers = ['name@domain.com']
+mail_host = 'mail.domain.com'
 
 my_bot_id = 'U2S28J9J7'
 
